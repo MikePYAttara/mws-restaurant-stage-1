@@ -151,7 +151,7 @@ createRestaurantHTML = (restaurant) => {
   image.className = 'restaurant-img';
   image.src = DBHelper.imageUrlForRestaurant(restaurant);
   // Add alternative text.
-  image.setAttribute('alt', restaurant.alternative_text);
+  image.setAttribute('alt', `photo of ${restaurant.name}`);
   li.append(image);
 
   // Create a div with class card-primary that contains h2, h3.
@@ -188,7 +188,6 @@ createRestaurantHTML = (restaurant) => {
   divCardActions.append(more);
   li.append(divCardActions);
 
-  // Return has automatic semicolon insertion (ASI).
   return li
 }
 

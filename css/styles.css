@@ -29,10 +29,6 @@ body {
   color: #000000;
 }
 
-article, aside, canvas, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
-	display: block;
-}
-
 /* Not setting block level elements */
 /* https://developer.mozilla.org/en-US/docs/Web/HTML/Block-level_elements */
 
