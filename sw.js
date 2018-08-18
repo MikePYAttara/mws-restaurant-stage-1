@@ -28,7 +28,7 @@ const resources = [
       .then(cache => {
           const rsc = resources;
           rsc.forEach(r => {
-              cache.(resource);
+              cache.add(resource);
           });
       })
       .catch(err => console.log(err))
