@@ -115,7 +115,7 @@ video {
 /* -------------------------------------------------------------------------- */
 
 .restaurants-filter {
-	height: 3rem;
+	min-height: 3rem;
 	display: flex;
 	flex-direction: row;
 	justify-content: space-evenly;
