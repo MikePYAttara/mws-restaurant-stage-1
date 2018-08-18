@@ -4,13 +4,38 @@ let restaurants,
 var newMap
 var markers = []
 
+
+// REGISTER SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/mws-restaurant-stage-1/sw.js', { scope : '/mws-restaurant-stage-1/'})
+  .then(reg => {
+    // Registration successful
+    console.log('Service Worker registered!')
+    if (reg.waiting) {
+      self.skipWaiting();  	
+        return;
+      }
+
+      if (reg.installing) {
+        return;}
+    
+      if (reg.active) {
+        return;
+      }
+
+  }, err => {
+    // Registration failed :(
+    console.log('ServiceWorker registration failed: ', err);
+  });
+};     
+
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
  */
 document.addEventListener('DOMContentLoaded', (event) => {
   initMap(); // added 
   fetchNeighborhoods();
-  fetchCuisines();
+  fetchCuisines(); 
 });
 
 /**
