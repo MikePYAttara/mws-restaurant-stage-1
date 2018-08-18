@@ -366,7 +366,7 @@ video {
   display: flex;
   flex-direction: row;
   align-items: center;
-  background-color: #ff79b0;
+  background-color: #3f51b5;
 }
 
 .review-card-rating-content {
