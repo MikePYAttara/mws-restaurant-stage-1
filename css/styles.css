@@ -3,10 +3,6 @@
 
 /* -------------------------------------------------------------------------- */
 
-/* Common Stuff */
-
-/* Using a Material Design color palette - https://material.io */
-/* Primary color - Indigo, secondary Color - Pink */
 
 * {
   /* border-box - includes content, padding and border */
@@ -120,14 +116,14 @@ video {
 	flex-direction: row;
 	justify-content: space-evenly;
 	align-items: center;
-  background-color: #1c3be7;
+  background-color: #4961e798;
 }
 
 .restaurants-filter select {
 	width: calc(50% - 1em);
 	height: 1.75rem;
 	font-size: 1rem;
-	background-color: rgb(255, 255, 255);
+	background-color: rgba(255, 255, 255, 0.671);
 	border: none;
 	outline: none;
 }
@@ -216,7 +212,7 @@ video {
 }
 
 .card-actions-link:hover, .card-actions-link:focus {
-  color: #ff4081;
+  color: #4d09cc;
 }
 
 
@@ -257,7 +253,7 @@ video {
 }
 
 .breadcrumb-link:hover, .breadcrumb-link:focus {
-  color: #ff4081;
+  color: #4903b9;
 }
 
 

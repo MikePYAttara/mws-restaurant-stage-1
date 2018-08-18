@@ -7,7 +7,7 @@ var markers = []
 
 // REGISTER SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/mws-restaurant-stage-1/sw.js', { scope : '/mws-restaurant-stage-1/'})
+  navigator.serviceWorker.register('/sw.js', { scope : '/mws-restaurant-stage-1/'})
   .then(reg => {
     // Registration successful
     console.log('Service Worker registered!')
