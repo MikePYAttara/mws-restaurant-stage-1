@@ -35,10 +35,10 @@ class DBHelper {
     .then(response => response.json())
     .then(response => {
       const restaurants = response.restaurants
-      callback(null, restaurants);
+      return callback(null, restaurants)
     })
     .catch(error => {
-      callback(error, null);
+      return callback(error, null)
     })
   }
 
