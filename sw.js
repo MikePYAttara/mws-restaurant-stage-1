@@ -1,5 +1,5 @@
 const resources = [
-    '/index.html',
+    '/',
     '/restaurant.html',
     '/css/styles.css',
     '/js/main.js',
@@ -14,8 +14,7 @@ const resources = [
     '/img/7.jpg',
     '/img/8.jpg',
     '/img/9.jpg',
-    '/img/10.jpg',
-    '/data/restaurants.json'       
+    '/img/10.jpg'       
   ]
   
   self.addEventListener('install', event => {
