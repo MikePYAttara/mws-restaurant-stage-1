@@ -1,4 +1,10 @@
-const resources = [
+const DB_NAME = 'RestaurantReviewsDB',
+      DB_VERSION = 1,
+      DB_STORE_NAME = 'restaurants',
+      CACHE_NAME = 'RestaurantReviewsCache',
+      RESTAURANTS_URL = 'http://localhost:1337/restaurants',
+      
+      CACHE_RESOURCES = [
     '/',
     '/css/styles.css',
     '/js/main.js',
@@ -13,29 +19,58 @@ const resources = [
     '/img/8.jpg',
     '/img/9.jpg',
     '/img/10.jpg'       
-  ]
+  ];
+
+  openDb = () => {
+    let db;
+    const req = indexedDB.open(DB_NAME, DB_VERSION);
+
+    req.onerror = event => event.target.errorCode;
+
+    req.onsuccess = event => db = this.result;
+
+    req.onupgradeneeded = event => {
+      const restaurants = fetch(RESTAURANTS_URL).then(response.json());
+      const store = event.currentTarget.result.createObjectStore(
+        DB_STORE_NAME, { keyPath: 'id' });
+      store.createIndex('id', 'id', { unique: true });
+      store.transaction.oncomplete = event => {
+        const restaurantOS = getObjectStore(DB_STORE_NAME, 'readwrite');
+        restaurants.forEach( restaurant => restaurantOS.add(restaurant) );
+      };
+    };
+  };
+
+  getObjectStore = (store_name, mode='readonly') => {
+    const tx = req.transaction(store_name, mode);
+    return tx.objectStore(store_name);
+  }
+ 
+
   
   self.addEventListener('install', event => {
     event.waitUntil(
-      caches.open('restaurant-v1')
+      caches.open(CACHE_NAME)
       .then(cache => {
-          cache.addAll(resources);
+          cache.addAll(CACHE_RESOURCES);
       })
-      .catch(err => console.log(err))
+      .then(openDb())
+      .catch(error => console.log(error))
     )
   })
 
   self.addEventListener('fetch', event => {
     const requestUrl = event.request;
+    // Cache resources
     if (!requestUrl.url.includes('localhost:1337/restaurants')) {
       event.respondWith(
-        caches.open('restaurant-v1')
+        caches.open('RestaurantReviewsCache')
         .then(cache => {
-          return cache.match(event.request)
+          return cache.match(requestUrl)
           .then(response => {
-            return response || fetch(event.request)
+            return response || fetch(requestUrl)
             .then(response => {
-              cache.put(event.request, response.clone());
+              cache.put(requestUrl, response.clone());
               return response;
             });
           });
@@ -44,35 +79,31 @@ const resources = [
       );
     };
 
-    const request = indexedDB.open('RestaurantReviewDB', 1);
-    request.onerror = event => {
-      console.dir(event);
+    const restaurants = [],
+    db = indexedDB.open(DB_NAME, DB_VERSION);
+    store = getObjectStore(DB_STORE_NAME);
+    store.openCursor().onsuccess = event => {
+      const cursor = event.target.result;
+      if (cursor) {
+        restaurants.push(cursor);
+        cursor.continue();
+      };
     };
-    request.onupgradeneeded = event => {
-      const  db = event.target.result;
-      if (!db.objectStoreNames.contains('restaurants')) {
-        const restaurantOS = db.createObjectStore('restaurants', {keyPath: 'id'});
-        restaurantOS.createIndex('id', 'id', {unique: true})
-        restaurantOS.transaction.oncomplete = event => {
-          const restaurantOS = db.transaction(['restaurants'], 'readwrite').objectStore('restaurants');
-          const restaurants = fetch(requestUrl).then(response.json())
-          restaurants.forEach(restaurant => {
-            restaurantOS.add(restaurant);
-          });
-        }
-      }
-    };
+    return restaurants
 
-    request.onsuccess = event => {
-      const restaurants = [];
-      const db = event.target.result;
-      const restaurantOS = db.transaction(['restaurants']).objectStore('restaurants');
-      restaurantOS.openCursor().onsuccess = event => {
-        for (let restaurant in restaurants) {
-          restaurants.push(restaurant);
-        }
-      }
-      return restaurants;
-    }
+
+    // request.onsuccess = event => {
+    //   const restaurants = [];
+    //   const db = event.target.result;
+    //   const restaurantOS = db.transaction(['restaurants']).objectStore('restaurants');
+    //   restaurantOS.openCursor().onsuccess = event => {
+    //     const cursor = event.target.result;
+    //     if (cursor) {
+    //       restaurants.push(cursor);
+    //       cursor.continue();
+    //     };
+    //   };
+    //   return restaurants;
+    // };
 
   })
