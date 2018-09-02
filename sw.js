@@ -42,8 +42,6 @@ const DB_NAME = 'RestaurantReviewsDB',
     };
 
     req.onerror = event => event.target.errorCode;
-
-  };
  
   
   self.addEventListener('install', event => {
@@ -83,7 +81,7 @@ const DB_NAME = 'RestaurantReviewsDB',
     store.openCursor().onsuccess = event => {
       const cursor = event.target.result;
       if (cursor) {
-        restaurants.push(cursor);
+        restaurants.push(cursor.value);
         cursor.continue();
       };
     };
