@@ -34,7 +34,6 @@ const DB_NAME = 'RestaurantReviewsDB',
       restaurants.forEach(restaurant => {
         objStore.add(restaurant);
       });
-      };
     };
 
     req.onsuccess = event => {
@@ -42,6 +41,7 @@ const DB_NAME = 'RestaurantReviewsDB',
     };
 
     req.onerror = event => event.target.errorCode;
+  };
  
   
   self.addEventListener('install', event => {
