@@ -28,12 +28,22 @@ const DB_NAME = 'RestaurantReviewsDB',
     req.onupgradeneeded = event => {
       const restaurants = fetch(RESTAURANTS_URL).then(response => response.json());
       db = event.target.result;
-      const store = db.createObjectStore(DB_STORE_NAME, { keyPath: 'id' });
-      store.createIndex('id', 'id', { unique: true });
-      const objStore = db.transaction([DB_STORE_NAME], 'readwrite').objectStore(DB_STORE_NAME);
-      restaurants.forEach(restaurant => {
-        objStore.add(restaurant);
-      });
+      // if (!db.objectStoreNames.contains(DB_STORE_NAME)) {
+      //   const store = db.createObjectStore(DB_STORE_NAME, { keyPath: 'id' });
+      //   store.createIndex('id', 'id', { unique: true });
+      // };
+      const store = db.createObjectStore(DB_STORE_NAME, {keyPath: 'id'});
+      store.createIndex('id', 'id', {unique: true});
+      store.transaction.oncomplete = event => {
+        const store = db.transaction([DB_STORE_NAME], 'readwrite').objectStore(DB_STORE_NAME);
+        restaurants.forEach(restaurant => {
+          store.add(restaurant);
+        });
+      }
+      // const objStore = db.transaction([DB_STORE_NAME], 'readwrite').objectStore(DB_STORE_NAME);
+      // restaurants.forEach(restaurant => {
+      //   objStore.add(restaurant);
+      // });
     };
 
     req.onsuccess = event => {
