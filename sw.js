@@ -26,24 +26,15 @@ const DB_NAME = 'RestaurantReviewsDB',
     const req = indexedDB.open(DB_NAME, DB_VERSION);
 
     req.onupgradeneeded = event => {
-      const restaurants = fetch(RESTAURANTS_URL).then(response => response.json());
+      let restaurants;
+      fetch(RESTAURANTS_URL, {}).then(response => response.json())
+      .then(data => restaurants = data)
       db = event.target.result;
-      // if (!db.objectStoreNames.contains(DB_STORE_NAME)) {
-      //   const store = db.createObjectStore(DB_STORE_NAME, { keyPath: 'id' });
-      //   store.createIndex('id', 'id', { unique: true });
-      // };
       const store = db.createObjectStore(DB_STORE_NAME, {keyPath: 'id'});
       store.createIndex('id', 'id', {unique: true});
-      store.transaction.oncomplete = event => {
-        const store = db.transaction([DB_STORE_NAME], 'readwrite').objectStore(DB_STORE_NAME);
-        restaurants.forEach(restaurant => {
-          store.add(restaurant);
-        });
-      }
-      // const objStore = db.transaction([DB_STORE_NAME], 'readwrite').objectStore(DB_STORE_NAME);
-      // restaurants.forEach(restaurant => {
-      //   objStore.add(restaurant);
-      // });
+      restaurants.forEach(restaurant => {
+        store.add(restaurant);
+      });
     };
 
     req.onsuccess = event => {
@@ -83,19 +74,21 @@ const DB_NAME = 'RestaurantReviewsDB',
         })
         .catch(err => console.log(err))
       );
+    } else {
+      const restaurants = [],
+      req = indexedDB.open(DB_NAME, DB_VERSION);
+      req.onsuccess = event => {
+        const db = event.target.result;
+        store = db.transaction([DB_STORE_NAME]).objectStore(DB_STORE_NAME);
+        store.openCursor().onsuccess = event => {
+          const cursor = event.target.result;
+          if (cursor) {
+            restaurants.push(cursor.value);
+            cursor.continue();
+          };
+        };
+      }
+      return restaurants
     };
-
-    const restaurants = [],
-    db = indexedDB.open(DB_NAME, DB_VERSION);
-    store = db.transaction([DB_STORE_NAME], 'readonly').objectStore(DB_STORE_NAME);
-    store.openCursor().onsuccess = event => {
-      const cursor = event.target.result;
-      if (cursor) {
-        restaurants.push(cursor.value);
-        cursor.continue();
-      };
-    };
-    return restaurants
-
   })
 
