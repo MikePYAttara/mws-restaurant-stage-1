@@ -35,18 +35,12 @@ const DB_NAME = 'RestaurantReviewsDB',
         DB_STORE_NAME, { keyPath: 'id' });
       store.createIndex('id', 'id', { unique: true });
       store.transaction.oncomplete = event => {
-        const restaurantOS = getObjectStore(DB_STORE_NAME, 'readwrite');
+        const restaurantOS = req.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
         restaurants.forEach( restaurant => restaurantOS.add(restaurant) );
       };
     };
   };
-
-  getObjectStore = (store_name, mode='readonly') => {
-    const tx = req.transaction(store_name, mode);
-    return tx.objectStore(store_name);
-  }
  
-
   
   self.addEventListener('install', event => {
     event.waitUntil(
@@ -81,7 +75,7 @@ const DB_NAME = 'RestaurantReviewsDB',
 
     const restaurants = [],
     db = indexedDB.open(DB_NAME, DB_VERSION);
-    store = getObjectStore(DB_STORE_NAME);
+    store = db.transaction(DB_STORE_NAME, 'readwrite').objectStore(DB_STORE_NAME);
     store.openCursor().onsuccess = event => {
       const cursor = event.target.result;
       if (cursor) {
@@ -91,19 +85,6 @@ const DB_NAME = 'RestaurantReviewsDB',
     };
     return restaurants
 
-
-    // request.onsuccess = event => {
-    //   const restaurants = [];
-    //   const db = event.target.result;
-    //   const restaurantOS = db.transaction(['restaurants']).objectStore('restaurants');
-    //   restaurantOS.openCursor().onsuccess = event => {
-    //     const cursor = event.target.result;
-    //     if (cursor) {
-    //       restaurants.push(cursor);
-    //       cursor.continue();
-    //     };
-    //   };
-    //   return restaurants;
-    // };
-
   })
+
+  
