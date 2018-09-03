@@ -2,7 +2,7 @@ const DB_NAME = 'RestaurantReviewsDB',
       DB_VERSION = 1,
       DB_STORE_NAME = 'restaurants',
       CACHE_NAME = 'RestaurantReviewsCache',
-      RESTAURANTS_URL = 'http://localhost:1337/restaurants',
+      RESTAURANTS_URL = 'localhost:1337/restaurants',
       
       CACHE_RESOURCES = [
     '/',
@@ -18,7 +18,7 @@ const DB_NAME = 'RestaurantReviewsDB',
     '/img/7.jpg',
     '/img/8.jpg',
     '/img/9.jpg',
-    '/img/10.jpg'       
+    '/img/10.jpg' 
   ];
 
 
@@ -85,25 +85,52 @@ const DB_NAME = 'RestaurantReviewsDB',
   })
 
   self.addEventListener('fetch', event => {
-    const requestUrl = event.request;
-    // Cache resources
-    if (!requestUrl.url.includes('localhost:1337/restaurants')) {
+    if (!event.request.url.contains(RESTAURANTS_URL)) {
       event.respondWith(
-        caches.open('RestaurantReviewsCache')
+        caches.open(CACHE_NAME)
         .then(cache => {
-          return cache.match(requestUrl)
+          return cache.match(event.request)
           .then(response => {
-            return response || fetch(requestUrl)
+            return response || fetch(event.request)
             .then(response => {
-              cache.put(requestUrl, response.clone());
-              return response;
-            });
-          });
+              cache.put(event.request, response.clone());
+              return response
+            })
+          })
         })
-        .catch(err => console.log(err))
-      );
-    } else {
-      fetchJSONFromDB() || openDb();
-    };
+      )
+    }
+
+    event.respondWith(
+      idb.open(DB_NAME)
+      .then(db => {
+        db.objectStore(DB_STORE_NAME)
+        .then()
+      })
+    )
+
   })
+
+  // self.addEventListener('fetch', event => {
+  //   const requestUrl = event.request;
+  //   // Cache resources
+  //   if (!requestUrl.url.includes('localhost:1337/restaurants')) {
+  //     event.respondWith(
+  //       caches.open(CACHE_NAME)
+  //       .then(cache => {
+  //         return cache.match(requestUrl)
+  //         .then(response => {
+  //           return response || fetch(requestUrl)
+  //           .then(response => {
+  //             cache.put(requestUrl, response.clone());
+  //             return response;
+  //           });
+  //         });
+  //       })
+  //       .catch(err => console.log(err))
+  //     );
+  //   } else {
+  //     fetchJSONFromDB() || openDb();
+  //   };
+  // })
 
