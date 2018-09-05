@@ -1,4 +1,5 @@
-const DB_NAME = 'RestaurantReviewsDB',
+const idb = require('idb'),
+      DB_NAME = 'RestaurantReviewsDB',
       DB_VERSION = 1,
       DB_STORE_NAME = 'restaurants',
       CACHE_NAME = 'RestaurantReviewsCache',
