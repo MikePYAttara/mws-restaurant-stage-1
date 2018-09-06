@@ -1,11 +1,22 @@
-const StaticServer = require('static-server'),
+const StaticServer = require('static-server');
 
-server = new StaticServer({
-  rootPath: './dist',
-  port: 8080
+const server = new StaticServer({
+  rootPath: './src',
+  port: 8000
 });
  
 server.start(() => {
-  console.log(`Server listening on ${server.port}`);
+  console.log(`
+  --------------------------------------
+  --------------------------------------
+
+  SERVER LISTENING ON ${server.port}
+  
+  Visit http://localhost:${server.port} 
+  to view this website. 
+  
+  --------------------------------------
+  --------------------------------------
+  `);
 });
  

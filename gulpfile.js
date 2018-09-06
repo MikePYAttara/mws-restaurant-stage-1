@@ -1,6 +1,6 @@
 const gulp = require('gulp');
 const minify = require('gulp-clean-css');
-const sourcemaps = require('sourcemaps');
+const sourcemaps = require('gulp-sourcemaps');
 const uglify = require('uglify');
 const autoprifixer = require('gulp-autoprefixer');
 const imagemin = require('imagemin');
@@ -28,7 +28,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('images', () => {
-	return gulp.src('./src/img/**/*.{'jpg','jpeg','png','svg'}')
+	return gulp.src("./src/img/**/*.{'jpg','jpeg','png','svg'}")
 	.pipe(imagemin())
 	.pipe(gulp.dest('/dist/img/'))
 });
@@ -44,4 +44,4 @@ gulp.task('sw', () => {
 });
 
 
-gulp.task('default', ['js', 'css', 'html', 'sw', 'manifest', 'images'];
+gulp.task('default', ['js', 'css', 'html', 'sw', 'manifest', 'images']);

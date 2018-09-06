@@ -4,7 +4,6 @@ const DB_NAME = 'RestaurantReviewsDB',
       DB_VERSION = 1,
       DB_STORE_NAME = 'restaurants',
       CACHE_NAME = 'RestaurantReviewsCache',
-      RESTAURANTS_URL = 'localhost:1337/restaurants',
       
       CACHE_RESOURCES = [
     '/',
@@ -34,21 +33,22 @@ const DB_NAME = 'RestaurantReviewsDB',
   })
 
   self.addEventListener('fetch', event => {
-    if (!event.request.url.contains(RESTAURANTS_URL)) {
-      event.respondWith(
-        caches.open(CACHE_NAME)
-        .then(cache => {
-          return cache.match(event.request)
+    event.respondWith(
+      caches.open(CACHE_NAME)
+      .then(cache => {
+        return cache.match(event.request)
+        .then(response => {
+          return response || fetch(event.request)
           .then(response => {
-            return response || fetch(event.request)
-            .then(response => {
-              cache.put(event.request, response.clone());
-              return response
-            })
+            cache.put(event.request, response.clone());
+            return response
           })
         })
-      )
-    }
+      })
+    )
+    // if (!event.request.url.contains(RESTAURANTS_URL)) {
+     
+    // }
 
     // event.respondWith(
     //   idb.open(DB_NAME)
