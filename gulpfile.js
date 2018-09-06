@@ -11,7 +11,7 @@ gulp.task('css', () => {
     .pipe(autoprifixer())
     .pipe(minify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./dist/css/'))
+    .pipe(gulp.dest('./dist/css'))
 });
 
 gulp.task('js', () => {
@@ -19,28 +19,28 @@ gulp.task('js', () => {
     .pipe(sourcemaps.init())
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('./dist/js/'))
+    .pipe(gulp.dest('./dist/js'))
 });
 
 gulp.task('html', () => {
 	return gulp.src('./src/**/*.html')
-	gulp.pipe(gulp.dest('./dist/'))
+	gulp.pipe(gulp.dest('./dist'))
 });
 
 gulp.task('images', () => {
 	return gulp.src("./src/img/**/*.{'jpg','jpeg','png','svg'}")
 	.pipe(imagemin())
-	.pipe(gulp.dest('/dist/img/'))
+	.pipe(gulp.dest('/dist/img'))
 });
 
 gulp.task('manifest', () => {
 	return gulp.src('./manifest/*')
-	.pipe(gulp.dest('./dist/manifest/'))
+	.pipe(gulp.dest('./dist/manifest'))
 });
 
 gulp.task('sw', () => {
 	return gulp.src('./sw.js')
-	.pipe(gulp.dest('./dist/sw.js'))
+	.pipe(gulp.dest('./dist'))
 });
 
 

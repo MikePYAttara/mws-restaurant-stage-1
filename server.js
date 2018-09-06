@@ -7,16 +7,15 @@ const server = new StaticServer({
  
 server.start(() => {
   console.log(`
-  ----------------------------------------------------
-        --------------------------------------
+  -----------------------------------------------------------
+        -----------------------------------------
 
-    THE SERVER LIVE AND LISTENING ON ${server.port}
+  THE SERVER LIVE AND LISTENING ON PORT ${server.port}
   
-    Visit http://localhost:${server.port} 
-    to view this website. 
+  Visit http://localhost:${server.port} to view this website. 
   
-        ---------------------------------------
-  ------------------------------------------------------
+        ------------------------------------------
+  ------------------------------------------------------------
   `);
 });
  
