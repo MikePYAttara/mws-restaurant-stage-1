@@ -1,12 +1,12 @@
 {
   "name": "restaurant-reviews",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "---\r #### _Three Stage Course Material Project - Restaurant Reviews_",
   "main": "sw.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp",
-    "server": "node server"
+    "start": "gulp; node server",
+    "serve": "node server"
   },
   "repository": {
     "type": "git",
