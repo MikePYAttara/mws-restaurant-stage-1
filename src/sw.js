@@ -23,21 +23,18 @@ const DB_NAME = 'RestaurantReviewsDB',
     '/img/10.jpg' 
   ];
 
-  let db;
-
 
   self.addEventListener('install', event => {
     event.waitUntil(
       caches.open(CACHE_NAME)
       .then(cache => cache.addAll(CACHE_RESOURCES))
-      // .then(() = {
-      //   db = idb.open(DB_NAME, DB_VERSION, upgradeDB = {
-      //     if (!upgradeDB.objectStoreNames.contains(DB_STORE_NAME)) {
-      //       upgradeDB.createObjectStore(DB_STORE_NAME, {keyPath: 'id'})
-      //     }
-      //     return transaction.complete
-      //   })
-      // })
+      .then(() => {
+        idb.open(DB_NAME, DB_VERSION, upgradeDB => {
+          if (!upgradeDB.objectStoreNames.contains(DB_STORE_NAME)) {
+            upgradeDB.createObjectStore(DB_STORE_NAME, {keyPath: 'id'})
+          };
+        })
+      })
       .catch(error => console.log(error))
     )
   })
@@ -46,19 +43,14 @@ const DB_NAME = 'RestaurantReviewsDB',
     const REQ = event.request;
     if (REQ.url.contains(RESTAURANTS_URL)) {
       event.respondWith(
-        idb.open(DB_NAME, DB_VERSION, upgradeDB => {
-          if (!upgradeDB.objectStoreNames.contains(DB_STORE_NAME)) {
-            upgradeDB.createObjectStore(DB_STORE_NAME, {keyPath: 'id'})
-          };
-          const objStore = upgradeDB.transaction.objectStore(DB_STORE_NAME);
-          return objStore.getAll()
-        })
-        .then(response => {
-          return response || fetch(REQ)
+        idb.open(DB_NAME, DB_VERSION)
+        .then(db => {
+          const objectStore = db.transaction(DB_STORE_NAME, 'readonly').objectStore(DB_STORE_NAME);
+          return objectStore.getAll() || fetch(REQ)
           .then(response => response.json())
           .then(restaurants => {
-            const store = db.transaction.objectStore(DB_STORE_NAME);
-            store.put(restaurants.clone())
+            const objectStore = db.transaction(DB_STORE_NAME, 'readwrite').createObjectStore(DB_STORE_NAME);
+            restaurants.forEach(restaurant => objectStore.put(restaurant, restaurant.id));
             return restaurants
           })
         })
