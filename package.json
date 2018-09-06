@@ -21,6 +21,10 @@
     "gulp": "^3.9.1",
     "gulp-sourcemaps": "^2.6.4",
     "imagemin": "^6.0.0",
-    "static-server": "^2.2.1"
+    "static-server": "^2.2.1",
+    "uglify": "^0.1.5"
+  },
+  "dependencies": {
+    "idb": "^2.1.3"
   }
 }
