@@ -19,16 +19,18 @@
   },
   "homepage": "https://github.com/mikeattara/mws-restaurant#readme",
   "devDependencies": {
+    "@babel/core": "^7.0.0",
+    "@babel/preset-env": "^7.0.0",
     "gulp": "^3.9.1",
     "gulp-autoprefixer": "^6.0.0",
+    "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^3.10.0",
+    "gulp-imagemin": "^4.1.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
-    "imagemin": "^6.0.0",
     "static-server": "^2.2.1"
   },
   "dependencies": {
-    "del": "^3.0.0",
     "idb": "^2.1.3"
   }
 }

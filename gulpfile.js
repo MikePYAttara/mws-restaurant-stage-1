@@ -1,9 +1,10 @@
-let gulp = require('gulp');
-let minify = require('gulp-clean-css');
-let sourcemaps = require('gulp-sourcemaps');
-let uglify = require('gulp-uglify');
-let autoprifixer = require('gulp-autoprefixer');
-let imagemin = require('imagemin');
+const gulp = require('gulp');
+const minify = require('gulp-clean-css');
+const sourcemaps = require('gulp-sourcemaps');
+const uglify = require('gulp-uglify');
+const autoprifixer = require('gulp-autoprefixer');
+const imagemin = require('gulp-imagemin');
+const babel = require('gulp-babel');
 
 gulp.task('css', () => {
     return gulp.src('src/css/**/*.css')
@@ -17,9 +18,12 @@ gulp.task('css', () => {
     .pipe(gulp.dest('dist/css'))
 });
 
-gulp.task('js', () => {
-    return gulp.src('src/js/**/*.js')
+gulp.task('js', cb => {
+    gulp.src(['src/js/**/*.js'])
     .pipe(sourcemaps.init())
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
     .pipe(uglify())
     .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist/js'))
@@ -37,12 +41,12 @@ gulp.task('images', () => {
 });
 
 gulp.task('manifest', () => {
-	return gulp.src('manifest/*')
+	return gulp.src(['src/manifest/*'])
 	.pipe(gulp.dest('dist/manifest'))
 });
 
 gulp.task('sw', () => {
-	return gulp.src('sw.js')
+	return gulp.src('src/sw.js')
 	.pipe(gulp.dest('dist'))
 });
 
