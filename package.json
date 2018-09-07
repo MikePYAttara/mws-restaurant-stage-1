@@ -5,7 +5,7 @@
   "main": "sw.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "gulp; node server",
+    "start": "gulp",
     "serve": "node server"
   },
   "repository": {
@@ -23,9 +23,9 @@
     "gulp-autoprefixer": "^6.0.0",
     "gulp-clean-css": "^3.10.0",
     "gulp-sourcemaps": "^2.6.4",
+    "gulp-uglify": "^3.0.1",
     "imagemin": "^6.0.0",
-    "static-server": "^2.2.1",
-    "uglify": "^0.1.5"
+    "static-server": "^2.2.1"
   },
   "dependencies": {
     "del": "^3.0.0",
