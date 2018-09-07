@@ -1,10 +1,10 @@
 const gulp = require('gulp');
 const minify = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
-const uglify = require('gulp-uglify');
+// const uglify = require('gulp-uglify');
+// const babel = require('gulp-babel');
 const autoprifixer = require('gulp-autoprefixer');
 const imagemin = require('gulp-imagemin');
-const babel = require('gulp-babel');
 
 gulp.task('css', () => {
     return gulp.src('src/css/**/*.css')
@@ -20,12 +20,12 @@ gulp.task('css', () => {
 
 gulp.task('js', cb => {
     gulp.src(['src/**/*.js'])
-    .pipe(sourcemaps.init())
-    .pipe(babel({
-        presets: ['@babel/env']
-    }))
-    .pipe(uglify())
-    .pipe(sourcemaps.write())
+    // .pipe(sourcemaps.init())
+    // .pipe(babel({
+    //     presets: ['@babel/env']
+    // }))
+    // .pipe(uglify())
+    // .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
 });
 

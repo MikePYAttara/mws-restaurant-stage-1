@@ -1,7 +1,7 @@
 const StaticServer = require('static-server');
 
 const server = new StaticServer({
-  rootPath: './dist',
+  rootPath: './src',
   port: 8000
 });
  

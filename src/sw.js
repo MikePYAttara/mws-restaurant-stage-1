@@ -11,7 +11,6 @@ const DB_NAME = 'RestaurantReviewsDB',
       DB_VERSION = 1,
       DB_STORE_NAME = 'restaurants',
       CACHE_NAME = 'RestaurantReviewsCache',
-      RESTAURANTS_URL = 'localhost:1337/restaurants',
       
       CACHE_RESOURCES = [
     '/',
@@ -47,31 +46,14 @@ const DB_NAME = 'RestaurantReviewsDB',
   })
 
   self.addEventListener('fetch', event => {
-    const REQ = event.request;
-    if (REQ.contains(RESTAURANTS_URL)) {
-      event.respondWith(
-        idb.open(DB_NAME, DB_VERSION)
-        .then(db => {
-          const objectStore = db.transaction(DB_STORE_NAME, 'readonly').objectStore(DB_STORE_NAME);
-          return objectStore.getAll() || fetch(REQ)
-          .then(response => response.json())
-          .then(restaurants => {
-            const objectStore = db.transaction(DB_STORE_NAME, 'readwrite').createObjectStore(DB_STORE_NAME);
-            restaurants.forEach(restaurant => objectStore.put(restaurant, restaurant.id));
-            return restaurants
-          })
-        })
-      )
-    }
-
     event.respondWith(
       caches.open(CACHE_NAME)
       .then(cache => {
-        return cache.match(REQ)
+        return cache.match(event.request)
         .then(response => {
-          return response || fetch(REQ)
+          return response || fetch(event.request)
           .then(response => {
-            cache.put(REQ, response.clone());
+            cache.put(event.request, response.clone());
             return response
           })
         })
