@@ -19,14 +19,14 @@ gulp.task('css', () => {
 });
 
 gulp.task('js', cb => {
-    gulp.src(['src/js/**/*.js'])
+    gulp.src(['src/**/*.js'])
     .pipe(sourcemaps.init())
     .pipe(babel({
         presets: ['@babel/env']
     }))
     .pipe(uglify())
     .pipe(sourcemaps.write())
-    .pipe(gulp.dest('dist/js'))
+    .pipe(gulp.dest('dist'))
 });
 
 gulp.task('html', () => {
@@ -35,7 +35,7 @@ gulp.task('html', () => {
 });
 
 gulp.task('images', () => {
-	return gulp.src("src/img/**/*.{'jpg','jpeg','png','svg'}")
+	return gulp.src(['src/img/*.jpg'])
 	.pipe(imagemin())
 	.pipe(gulp.dest('dist/img'))
 });
@@ -45,10 +45,4 @@ gulp.task('manifest', () => {
 	.pipe(gulp.dest('dist/manifest'))
 });
 
-gulp.task('sw', () => {
-	return gulp.src('src/sw.js')
-	.pipe(gulp.dest('dist'))
-});
-
-
-gulp.task('default', ['js', 'css', 'html', 'sw', 'manifest', 'images']);
+gulp.task('default', ['js', 'css', 'html', 'manifest', 'images']);
