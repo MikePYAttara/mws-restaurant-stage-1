@@ -60,24 +60,24 @@ const DB_NAME = 'RestaurantReviewsDB',
           })
         })
       )
-    }
-
-    event.respondWith(
-      fetch(event.request)
-      .then(response => {
-        const clonedResponse = response.clone()
-        clonedResponse.json()
-        .then(data => {
-          dbPromise
-          .then(db => {
-            const tx = db.transaction([DB_STORE_NAME], 'readwrite');
-            const store = tx.objectStore([DB_STORE_NAME])
-            for (let key in data) {
-              store.put(key);
-            }
+    } else {
+      event.respondWith(
+        fetch(event.request)
+        .then(response => {
+          const clonedResponse = response.clone()
+          clonedResponse.json()
+          .then(data => {
+            dbPromise
+            .then(db => {
+              const tx = db.transaction([DB_STORE_NAME], 'readwrite');
+              const store = tx.objectStore([DB_STORE_NAME])
+              for (let key in data) {
+                store.put(key);
+              }
+            })
           })
+          return response
         })
-        return response
-      })
-    )
+      )
+    }
   })
