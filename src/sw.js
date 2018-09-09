@@ -29,33 +29,49 @@ const DB_NAME = 'RestaurantReviewsDB',
     '/img/10.jpg' 
   ];
 
+  const dbPromise = idb.open(DB_NAME, DB_VERSION, upgradeDB => {
+    if (!upgradeDB.objectStoreNames.contains(DB_STORE_NAME)) {
+      upgradeDB.createObjectStore(DB_STORE_NAME, {keyPath: 'id'})
+    };
+  })
+
 
   self.addEventListener('install', event => {
     event.waitUntil(
       caches.open(CACHE_NAME)
       .then(cache => cache.addAll(CACHE_RESOURCES))
-      .then(() => {
-        idb.open(DB_NAME, DB_VERSION, upgradeDB => {
-          if (!upgradeDB.objectStoreNames.contains(DB_STORE_NAME)) {
-            upgradeDB.createObjectStore(DB_STORE_NAME, {keyPath: 'id'})
-          };
-        })
-      })
       .catch(error => console.log(error))
     )
   })
 
   self.addEventListener('fetch', event => {
-    event.respondWith(
-      caches.open(CACHE_NAME)
-      .then(cache => {
-        return cache.match(event.request)
-        .then(response => {
-          return response || fetch(event.request)
+    if (event.request.url.origin === location.origin) {
+      event.respondWith(
+        caches.open(CACHE_NAME)
+        .then(cache => {
+          return cache.match(event.request)
           .then(response => {
-            cache.put(event.request, response.clone());
-            return response
+            return response || fetch(event.request)
+            .then(response => {
+              cache.put(event.request, response.clone());
+              return response
+            })
           })
+        })
+      )
+    }
+
+    event.respondWith(
+      dbPromise
+      .then(db => {
+        const store = db.transaction(DB_STORE_NAME).objectStore(DB_STORE_NAME);
+        const data = store.getAll();
+        (data) ? data.stringify() : fetch(event.request)
+        .then(response => {
+          const store = db.transaction(DB_STORE_NAME, 'readwrite'.objectStore(DB_STORE_NAME));
+          const data = response.json();
+          data.forEach(key => store.put(key[id]));
+          return response
         })
       })
     )
