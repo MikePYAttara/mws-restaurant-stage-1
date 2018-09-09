@@ -65,12 +65,15 @@ const DB_NAME = 'RestaurantReviewsDB',
       dbPromise
       .then(db => {
         const store = db.transaction(DB_STORE_NAME).objectStore(DB_STORE_NAME);
-        const data = store.getAll();
-        (data) ? data.stringify() : fetch(event.request)
+        return store.getAll()
+      })
+      .then( data => {
+        (data.count > 0) ? data.stringify() : fetch(event.request)
         .then(response => {
           const store = db.transaction(DB_STORE_NAME, 'readwrite'.objectStore(DB_STORE_NAME));
-          const data = response.json();
-          data.forEach(key => store.put(key[id]));
+          const data = response.clone();
+          const restaurants = data.json();
+          restaurants.forEach(key => store.put(key[key.id]));
           return response
         })
       })
