@@ -67,14 +67,15 @@ const DB_NAME = 'RestaurantReviewsDB',
           const clonedResponse = response.clone()
           clonedResponse.json()
           .then(data => {
-            dbPromise
-            .then(db => {
-              const tx = db.transaction([DB_STORE_NAME], 'readwrite');
-              const store = tx.objectStore([DB_STORE_NAME])
-              for (let key in data) {
+            for (let ket in data) {
+              dbPromise
+              .then(db => {
+                const tx = db.transaction([DB_STORE_NAME], 'readwrite');
+                const store = tx.objectStore([DB_STORE_NAME])
                 store.put(key);
-              }
-            })
+                return transaction.complete
+              })
+            }
           })
           return response
         })
