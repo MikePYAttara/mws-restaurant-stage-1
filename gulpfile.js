@@ -45,4 +45,10 @@ gulp.task('manifest', () => {
 	.pipe(gulp.dest('dist/manifest'))
 });
 
-gulp.task('default', ['js', 'css', 'html', 'manifest', 'images']);
+gulp.task('watch', () => {
+    gulp.watch(['src/*.html', 'src/**/*.js', 'src/css/*.css', 'src/reviews.webmanifest'], () => {
+        return gulp
+    });
+})
+
+gulp.task('default', ['js', 'css', 'html', 'manifest', 'images', 'watch']);

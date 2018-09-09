@@ -11,6 +11,7 @@ const DB_NAME = 'RestaurantReviewsDB',
       DB_VERSION = 1,
       DB_STORE_NAME = 'restaurants',
       CACHE_NAME = 'RestaurantReviewsCache',
+      RESTAURANTS_URL = 'localhost:1337/restaurants',
       
       CACHE_RESOURCES = [
     '/',
@@ -45,7 +46,7 @@ const DB_NAME = 'RestaurantReviewsDB',
   })
 
   self.addEventListener('fetch', event => {
-    if (event.request.url.origin === location.origin) {
+    if (!(event.request.url.indexOf(RESTAURANTS_URL) > -1)) {
       event.respondWith(
         caches.open(CACHE_NAME)
         .then(cache => {
@@ -62,20 +63,21 @@ const DB_NAME = 'RestaurantReviewsDB',
     }
 
     event.respondWith(
-      dbPromise
-      .then(db => {
-        const store = db.transaction(DB_STORE_NAME).objectStore(DB_STORE_NAME);
-        return store.getAll()
-      })
-      .then( data => {
-        (data.count > 0) ? data.stringify() : fetch(event.request)
-        .then(response => {
-          const store = db.transaction(DB_STORE_NAME, 'readwrite'.objectStore(DB_STORE_NAME));
-          const data = response.clone();
-          const restaurants = data.json();
-          restaurants.forEach(key => store.put(key[key.id]));
-          return response
+      fetch(event.request)
+      .then(response => {
+        const clonedResponse = response.clone()
+        clonedResponse.json()
+        .then(data => {
+          dbPromise
+          .then(db => {
+            const tx = db.transaction(DB_STORE_NAME, 'readwrite');
+            const store = tx.objectStore(DB_STORE_NAME)
+            for (let key in data) {
+              store.put(key);
+            }
+          })
         })
+        return response
       })
     )
   })
