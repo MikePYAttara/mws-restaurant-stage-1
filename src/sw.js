@@ -70,8 +70,8 @@ const DB_NAME = 'RestaurantReviewsDB',
         .then(data => {
           dbPromise
           .then(db => {
-            const tx = db.transaction(DB_STORE_NAME, 'readwrite');
-            const store = tx.objectStore(DB_STORE_NAME)
+            const tx = db.transaction([DB_STORE_NAME], 'readwrite');
+            const store = tx.objectStore([DB_STORE_NAME])
             for (let key in data) {
               store.put(key);
             }
