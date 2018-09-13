@@ -1,8 +1,8 @@
 const gulp = require('gulp');
 const minify = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
-// const uglify = require('gulp-uglify');
-// const babel = require('gulp-babel');
+const uglify = require('gulp-uglify');
+const babel = require('gulp-babel');
 const autoprifixer = require('gulp-autoprefixer');
 const imagemin = require('gulp-imagemin');
 
@@ -20,12 +20,12 @@ gulp.task('css', () => {
 
 gulp.task('js', cb => {
     gulp.src(['src/**/*.js'])
-    // .pipe(sourcemaps.init())
-    // .pipe(babel({
-    //     presets: ['@babel/env']
-    // }))
-    // .pipe(uglify())
-    // .pipe(sourcemaps.write())
+    .pipe(sourcemaps.init())
+    .pipe(babel({
+        presets: ['@babel/env']
+    }))
+    .pipe(uglify())
+    .pipe(sourcemaps.write())
     .pipe(gulp.dest('dist'))
 });
 
@@ -46,9 +46,7 @@ gulp.task('manifest', () => {
 });
 
 gulp.task('watch', () => {
-    gulp.watch(['src/*.html', 'src/**/*.js', 'src/css/*.css', 'src/reviews.webmanifest'], () => {
-        return gulp
-    });
-})
+    gulp.watch(['src/*.html', 'src/**/*.js', 'src/css/*.css', 'src/reviews.webmanifest'], 'default')
+});
 
 gulp.task('default', ['js', 'css', 'html', 'manifest', 'images', 'watch']);
