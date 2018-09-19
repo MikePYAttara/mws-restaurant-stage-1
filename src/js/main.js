@@ -7,27 +7,16 @@ var markers = []
 
 // REGISTER SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/sw.js', { scope : '/'})
-  .then(reg => {
-    // Registration successful
-    console.log('Service Worker registered! Scope is ', reg.scope)
-    if (reg.waiting) {
-      self.skipWaiting();  	
-        return;
-      }
-
-      if (reg.installing) {
-        return;}
-    
-      if (reg.active) {
-        return;
-      }
-
-  }, err => {
-    // Registration failed :(
-    console.log('ServiceWorker registration failed: ', err);
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then(registration => {
+        console.log(`Service Worker registered! Scope: ${registration.scope}`);
+      })
+      .catch(error => {
+        console.log(`Service Worker registration failed: ${error}`);
+      });
   });
-};     
+}     
 
 /**
  * Fetch neighborhoods and cuisines as soon as the page is loaded.
