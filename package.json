@@ -28,7 +28,8 @@
     "gulp-imagemin": "^4.1.0",
     "gulp-sourcemaps": "^2.6.4",
     "gulp-uglify": "^3.0.1",
-    "static-server": "^2.2.1"
+    "static-server": "^2.2.1",
+    "workbox-build": "^3.5.0"
   },
   "dependencies": {
     "idb": "^2.1.3"
