@@ -149,7 +149,7 @@ class DBHelper {
     if (restaurant.photograph === undefined) {
       return (`/img/${restaurant.id}.jpg`);
     } else {
-      return (`/img/${restaurant.photograph || restaurant.id}.jpg`);
+      return (`/img/${restaurant.photograph}.jpg`);
     }
   }
 
